@@ -1,0 +1,66 @@
+server:
+  port: ${PORT:${SERVER_PORT:0}}
+spring:
+  application:
+    name: api-playlist
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/spotify-dev
+    username: usr-spotify
+    password: pwd-spotify
+  jpa:
+    hibernate.ddl-auto: update
+    generate-ddl: true
+    show-sql: true
+    
+eureka:
+   client:
+      registerWithEureka: true
+      fetchRegistry: true
+      serviceURL:
+         defaultZone: http://localhost:8761/eureka
+
+resilience4j.circuitbreaker:
+  instances:
+    PlayListMusic:
+
+      registerHealthIndicator: true
+
+      # N de llamadas que tienen que fallar para que pase a open
+      slidingWindowSize: 10
+
+      # que se active por contador de eventos (COUNT_BASED) o por contador de tiempo (TIME_BASED)
+      slidingWindowType: TIME_BASED
+
+      # porcentaje de llamadas fallidas
+      failureRateThreshold: 50
+
+      # N de llamadas que permitiremos en estado half-open (en closed u open). ?
+      permittedNumberOfCallsInHalfOpenState: 3
+
+      # tiempo que deberá esperar en open para pasar a half-open
+      waitDurationInOpenState: 5s
+
+      # N mínimo de registro de llamadas antes de calcular la tasa de fallos
+      minimumNumberOfCalls: 20
+
+      eventConsumerBufferSize: 10
+
+resilience4j.retry:
+  instances:
+    PlayListMusic:
+
+      # N de intentos antes de contar la solicitud como fallida (Incluye en primer llamado)
+      maxAttempts: 2
+
+      # tiempo que esperamos para el próximo reintento
+      waitDuration: 30s
+
+      enableExponentialBackoff: true
+
+      # multiplicador exponencial del tiempo de espera
+      exponentialBackoffMultiplier: 2
+      
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
