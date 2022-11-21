@@ -22,7 +22,7 @@ eureka:
 
 resilience4j.circuitbreaker:
   instances:
-    PlayListMusic:
+    playListMusic:
 
       registerHealthIndicator: true
 
@@ -48,7 +48,7 @@ resilience4j.circuitbreaker:
 
 resilience4j.retry:
   instances:
-    PlayListMusic:
+    playListMusic:
 
       # N de intentos antes de contar la solicitud como fallida (Incluye en primer llamado)
       maxAttempts: 2
