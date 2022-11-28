@@ -12,6 +12,12 @@ spring:
     hibernate.ddl-auto: update
     generate-ddl: true
     show-sql: true
+  rabbitmq:
+    username: guest
+    password: guest
+    host: localhost
+    port: 5672
+
     
 eureka:
    client:
@@ -25,6 +31,11 @@ resilience4j.circuitbreaker:
     playListMusic:
 
       registerHealthIndicator: true
+
+# Hacer en circuit break: 50% de las llamadas que duren más de 5 segundos abran el circuito (asi somos mas especificos)
+# y un retry con 2 intentos e intervalo de espera de 30 segundos
+# en la UNICA integracion GET de playlist a music
+
 
       # N de llamadas que tienen que fallar para que pase a open
       slidingWindowSize: 10
